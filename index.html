@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Genius Links Dashboard</title>
+    <title>Whole Cool Tools Catalog</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -61,15 +61,34 @@
         .short-url:hover {
             text-decoration: underline;
         }
+        .summary {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
         h1 {
-            color: #333;
-            margin-bottom: 10px;
+            color: #1a1a1a;
+            margin: 0 0 20px 0;
+            font-size: 2.5em;
+            font-weight: 700;
         }
         .description {
-            color: #666;
+            color: #444;
             font-size: 16px;
             margin-bottom: 30px;
-            line-height: 1.5;
+            line-height: 1.6;
+        }
+        .description a {
+            color: #2196F3;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        .description a:hover {
+            color: #1976D2;
+            text-decoration: underline;
         }
         .product-title {
             font-size: 16px;
@@ -142,9 +161,10 @@
 <body>
     <div class="container">
         <div class="summary">
-            <h1>Cool Tools</h1>
+            <h1>Cool Tools Omnilist</h1>
             <div class="description">
-                These are all the products we've mentioned in Cool Tools, our podcast, and newsletters.
+                These are all the products we've mentioned since 2020 in <a href="https://www.recomendo.com/">Recomendo</a>, <a href="https://kk.org/cooltools/">Cool Tools</a>, our <a href="https://www.youtube.com/cooltools">
+                    YouTube channel</a>, <a href="https://cooltoolsshow.libsyn.com/">podcast</a>, and other newsletters, including <a href="https://garstips.substack.com/">Gar's Tips & Tools</a>, <a href="https://nomadico.substack.com/">Nomadico</a>, <a href="https://whatsinmynow.substack.com/">What's in my NOW?</a>, <a href="https://toolsforpossibilities.substack.com/">Tools for Possibilities</a>, <a href="https://booksthatbelongonpaper.substack.com/">Books That Belong On Paper</a> and <a href="https://bookfreak.substack.com/">Book Freak</a>.
             </div>
             <div class="filters">
                 <input type="text" id="searchFilter" placeholder="Search products..." class="search-input">
