@@ -37,3 +37,13 @@ Please ensure your submission includes:
 - Free/Paid status
 
 ## Local Development
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Thanks to all contributors who have suggested tools
+- Built with vanilla JavaScript and CSS
+- Hosted on GitHub Pages
