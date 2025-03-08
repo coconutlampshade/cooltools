@@ -215,6 +215,18 @@
     </div>
 
     <script>
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
         let allLinksData = new Map();
         let availableYears = new Set();
 
@@ -398,9 +410,9 @@
                 loading.style.display = 'none';
                 filterLinks();
                 
+                document.getElementById('searchFilter').addEventListener('input', debounce(filterLinks, 300));
                 document.getElementById('yearFilter').addEventListener('change', filterLinks);
                 document.getElementById('monthFilter').addEventListener('change', filterLinks);
-                document.getElementById('searchFilter').addEventListener('input', filterLinks);
                 document.getElementById('categoryFilter').addEventListener('change', filterLinks);
                 
             } catch (error) {
