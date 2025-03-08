@@ -318,7 +318,8 @@
                 link.ProductDisplayName2.toLowerCase().includes(searchTerm)
             );
 
-            filteredLinks.sort((a, b) => b.TotalClicks - a.TotalClicks);
+            // Replace the TotalClicks sort with a random sort
+            filteredLinks.sort(() => Math.random() - 0.5);
 
             let periodText = 'Showing: ';
             if (category !== 'all') {
