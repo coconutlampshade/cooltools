@@ -334,19 +334,28 @@
 
             const linksGrid = document.querySelector('.links-grid');
             linksGrid.innerHTML = '';
-            filteredLinks.forEach(link => {
-                const card = document.createElement('div');
-                card.className = 'link-card';
-                card.innerHTML = `
-                    <img src="${link.ProductArtworkThumbnailUrl150}" alt="${link.ProductDisplayName1}" class="product-image">
-                    <div class="product-title">${link.ProductDisplayName1}</div>
-                    <div class="brand">${link.ProductDisplayName2}</div>
-                    <div class="stats">
-                        <a href="https://geni.us/${link.ShortUrlCode}" target="_blank" class="genius-badge">Get it</a>
+            if (filteredLinks.length === 0) {
+                linksGrid.innerHTML = `
+                    <div class="no-results">
+                        <h3>No products found</h3>
+                        <p>Try adjusting your filters or search terms</p>
                     </div>
                 `;
-                linksGrid.appendChild(card);
-            });
+            } else {
+                filteredLinks.forEach(link => {
+                    const card = document.createElement('div');
+                    card.className = 'link-card';
+                    card.innerHTML = `
+                        <img src="${link.ProductArtworkThumbnailUrl150}" alt="${link.ProductDisplayName1}" class="product-image">
+                        <div class="product-title">${link.ProductDisplayName1}</div>
+                        <div class="brand">${link.ProductDisplayName2}</div>
+                        <div class="stats">
+                            <a href="https://geni.us/${link.ShortUrlCode}" target="_blank" class="genius-badge">Get it</a>
+                        </div>
+                    `;
+                    linksGrid.appendChild(card);
+                });
+            }
         }
 
         function resetFilters() {
