@@ -156,6 +156,46 @@
                 padding: 10px;
             }
         }
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0;
+            padding: 0 20px;
+        }
+        .filter-tag {
+            background: #e0e0e0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+        }
+        .remove-tag {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            font-size: 18px;
+            line-height: 1;
+        }
+        .remove-tag:hover {
+            color: #333;
+        }
+        @media (prefers-color-scheme: dark) {
+            .filter-tag {
+                background: #444;
+                color: #fff;
+            }
+            .remove-tag {
+                color: #aaa;
+            }
+            .remove-tag:hover {
+                color: #fff;
+            }
+        }
     </style>
 </head>
 <body>
@@ -288,6 +328,66 @@
             return 'other'; // Default category if no matches
         }
 
+        function updateFilterTags() {
+            const tagsContainer = document.createElement('div');
+            tagsContainer.className = 'filter-tags';
+            
+            const year = document.getElementById('yearFilter').value;
+            const month = document.getElementById('monthFilter').value;
+            const category = document.getElementById('categoryFilter').value;
+            const search = document.getElementById('searchFilter').value;
+            
+            if (year !== 'all') {
+                addFilterTag(tagsContainer, `Year: ${year}`, () => {
+                    document.getElementById('yearFilter').value = 'all';
+                    filterLinks();
+                });
+            }
+            
+            if (month !== 'all') {
+                const monthName = document.getElementById('monthFilter').options[document.getElementById('monthFilter').selectedIndex].text;
+                addFilterTag(tagsContainer, `Month: ${monthName}`, () => {
+                    document.getElementById('monthFilter').value = 'all';
+                    filterLinks();
+                });
+            }
+            
+            if (category !== 'all') {
+                const categoryName = document.getElementById('categoryFilter').options[document.getElementById('categoryFilter').selectedIndex].text;
+                addFilterTag(tagsContainer, `Category: ${categoryName}`, () => {
+                    document.getElementById('categoryFilter').value = 'all';
+                    filterLinks();
+                });
+            }
+            
+            if (search) {
+                addFilterTag(tagsContainer, `Search: ${search}`, () => {
+                    document.getElementById('searchFilter').value = '';
+                    filterLinks();
+                });
+            }
+            
+            const existingTags = document.querySelector('.filter-tags');
+            if (existingTags) {
+                existingTags.remove();
+            }
+            
+            if (tagsContainer.children.length > 0) {
+                document.querySelector('.filters').after(tagsContainer);
+            }
+        }
+
+        function addFilterTag(container, text, onRemove) {
+            const tag = document.createElement('span');
+            tag.className = 'filter-tag';
+            tag.innerHTML = `
+                ${text}
+                <button class="remove-tag" aria-label="Remove filter">&times;</button>
+            `;
+            tag.querySelector('button').onclick = onRemove;
+            container.appendChild(tag);
+        }
+
         function filterLinks() {
             const searchTerm = document.getElementById('searchFilter').value.toLowerCase();
             let filteredLinks = Array.from(allLinksData.values());
@@ -368,6 +468,8 @@
                     linksGrid.appendChild(card);
                 });
             }
+
+            updateFilterTags();
         }
 
         function resetFilters() {
