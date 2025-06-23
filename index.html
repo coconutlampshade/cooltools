@@ -232,7 +232,7 @@
                         <option value="12">December</option>
                     </select>
                 </div>
-                <div class="filters">
+                <div>
                     <label class="filter-label">Category:</label>
                     <select id="categoryFilter" class="filter-select">
                         <option value="all">All Categories</option>
@@ -243,6 +243,15 @@
                         <option value="home">Home & Garden</option>
                         <option value="outdoor">Outdoor & Recreation</option>
                         <option value="health">Health & Personal Care</option>
+                    </select>
+                </div>
+                <div>
+                    <span class="filter-label">Sort by:</span>
+                    <select id="sortFilter">
+                        <option value="random">Random</option>
+                        <option value="popularity">Most Popular</option>
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
                     </select>
                 </div>
                 <button class="reset-button" onclick="resetFilters()">Reset Filters</button>
@@ -339,6 +348,7 @@
             const month = document.getElementById('monthFilter').value;
             const category = document.getElementById('categoryFilter').value;
             const search = document.getElementById('searchFilter').value;
+            const sort = document.getElementById('sortFilter').value;
             
             if (year !== 'all') {
                 addFilterTag(tagsContainer, `Year: ${year}`, () => {
@@ -366,6 +376,14 @@
             if (search) {
                 addFilterTag(tagsContainer, `Search: ${search}`, () => {
                     document.getElementById('searchFilter').value = '';
+                    filterLinks();
+                });
+            }
+            
+            if (sort !== 'random') {
+                const sortName = document.getElementById('sortFilter').options[document.getElementById('sortFilter').selectedIndex].text;
+                addFilterTag(tagsContainer, `Sort: ${sortName}`, () => {
+                    document.getElementById('sortFilter').value = 'random';
                     filterLinks();
                 });
             }
@@ -433,8 +451,31 @@
                 link.ProductDisplayName2.toLowerCase().includes(searchTerm)
             );
 
-            // Replace the TotalClicks sort with a random sort
-            filteredLinks.sort(() => Math.random() - 0.5);
+            // Apply sorting based on user selection
+            const sortBy = document.getElementById('sortFilter').value;
+            switch (sortBy) {
+                case 'popularity':
+                    filteredLinks.sort((a, b) => (b.TotalClicks || 0) - (a.TotalClicks || 0));
+                    break;
+                case 'newest':
+                    filteredLinks.sort((a, b) => {
+                        const dateA = new Date(parseInt(a.CreatedUtc.replace('/Date(', '').replace(')/', '')));
+                        const dateB = new Date(parseInt(b.CreatedUtc.replace('/Date(', '').replace(')/', '')));
+                        return dateB - dateA;
+                    });
+                    break;
+                case 'oldest':
+                    filteredLinks.sort((a, b) => {
+                        const dateA = new Date(parseInt(a.CreatedUtc.replace('/Date(', '').replace(')/', '')));
+                        const dateB = new Date(parseInt(b.CreatedUtc.replace('/Date(', '').replace(')/', '')));
+                        return dateA - dateB;
+                    });
+                    break;
+                case 'random':
+                default:
+                    filteredLinks.sort(() => Math.random() - 0.5);
+                    break;
+            }
 
             let periodText = 'Showing: ';
             if (category !== 'all') {
@@ -480,6 +521,7 @@
             document.getElementById('monthFilter').value = 'all';
             document.getElementById('searchFilter').value = '';
             document.getElementById('categoryFilter').value = 'all';
+            document.getElementById('sortFilter').value = 'random';
             filterLinks();
         }
 
@@ -519,6 +561,7 @@
                 document.getElementById('yearFilter').addEventListener('change', filterLinks);
                 document.getElementById('monthFilter').addEventListener('change', filterLinks);
                 document.getElementById('categoryFilter').addEventListener('change', filterLinks);
+                document.getElementById('sortFilter').addEventListener('change', filterLinks);
                 
             } catch (error) {
                 loading.innerHTML = `Error loading links: ${error.message}`;
@@ -531,11 +574,13 @@
             const month = document.getElementById('monthFilter').value;
             const category = document.getElementById('categoryFilter').value;
             const search = document.getElementById('searchFilter').value;
+            const sort = document.getElementById('sortFilter').value;
             
             if (year !== 'all') url.searchParams.set('year', year);
             if (month !== 'all') url.searchParams.set('month', month);
             if (category !== 'all') url.searchParams.set('category', category);
             if (search) url.searchParams.set('search', search);
+            if (sort !== 'random') url.searchParams.set('sort', sort);
             
             navigator.clipboard.writeText(url.toString())
                 .then(() => alert('Link copied to clipboard!'))
@@ -556,6 +601,9 @@
             }
             if (params.has('search')) {
                 document.getElementById('searchFilter').value = params.get('search');
+            }
+            if (params.has('sort')) {
+                document.getElementById('sortFilter').value = params.get('sort');
             }
             
             if (params.toString()) {
